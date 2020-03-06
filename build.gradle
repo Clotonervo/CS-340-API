@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group 'CS-340-Milestone3'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.google.code.gson:gson:2.2.4'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-core
+    compile group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.0'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ses
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-ses', version: '1.11.737'
+}
