@@ -51,14 +51,14 @@ public class MockDatabase {
         assert request.getLimit() >= 0;
         assert request.getFollower() != null;
 
-        List<User> allFollowers = userFollowers.get(request.getFollower());
+        List<User> allFollowers = userFollowers.get(aliasToUser(request.getFollower()));
         List<User> responseFollowers = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;
 
         if(request.getLimit() > 0) {
             if (allFollowers != null) {
-                int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowers);
+                int followeesIndex = getFolloweesStartingIndex(aliasToUser(request.getLastFollowee()), allFollowers);
 
                 for(int limitCounter = 0; followeesIndex < allFollowers.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
                     responseFollowers.add(allFollowers.get(followeesIndex));
@@ -78,7 +78,7 @@ public class MockDatabase {
     }
 
     /*
-                 --------------------- get Following
+                 --------------------- Get Following
 
       */
     public FollowingResponse getFollowing(FollowingRequest request) {
@@ -110,6 +110,8 @@ public class MockDatabase {
                 return o2.getFirstName().compareTo(o1.getFirstName());
             }
         });
+
+        System.out.println(hasMorePages);
 
 
         return new FollowingResponse(responseFollowees, hasMorePages);

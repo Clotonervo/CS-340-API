@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public class FollowingDAO {
 
-    private static Map<User, List<User>> followeesByFollower;
     private MockDatabase mockDatabase;
 
     public FollowingDAO(){

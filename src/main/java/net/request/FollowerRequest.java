@@ -1,20 +1,21 @@
 package net.request;
 
-import models.User;
 
 public class FollowerRequest {
 
-    public User followee;
+    public String followee;
     public int limit;
-    public User lastFollower;
+    public String lastFollower;
 
-    public FollowerRequest(User followee, int limit, User lastFollower) {
+    public FollowerRequest(String followee, int limit, String lastFollower) {
         this.followee = followee;
         this.limit = limit;
         this.lastFollower = lastFollower;
     }
 
-    public User getFollower() {
+    public FollowerRequest(){}
+
+    public String getFollower() {
         return followee;
     }
 
@@ -22,7 +23,7 @@ public class FollowerRequest {
         return limit;
     }
 
-    public User getLastFollowee() {
+    public String getLastFollowee() {
         return lastFollower;
     }
 }
