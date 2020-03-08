@@ -7,6 +7,8 @@ import services.FollowingServiceImpl;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
+import java.io.IOException;
+
 /**
  * An AWS lambda function that returns the users a user is following.
  */
@@ -24,6 +26,12 @@ public class GetFollowingHandler implements RequestHandler<FollowingRequest, Fol
     @Override
     public FollowingResponse handleRequest(FollowingRequest request, Context context) {
         FollowingServiceImpl service = new FollowingServiceImpl();
-        return service.getFollowees(request);
+        try {
+            FollowingResponse response = service.getFollowees(request);
+            return response;
+        }
+        catch (IOException x){
+            return new FollowingResponse(x.getMessage());           //TODO: Figure out the database error thing [DBError] for 500 errors
+        }
     }
 }

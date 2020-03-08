@@ -14,9 +14,9 @@ public class FeedResponse extends PagedResponse  {
         super(false, message, false);
     }
 
-    public FeedResponse(boolean success, String message, boolean hasMorePages, List<Status> statuses, List<User> users)
+    public FeedResponse(boolean hasMorePages, List<Status> statuses, List<User> users)
     {
-        super(success, message, hasMorePages);
+        super(true, null, hasMorePages);
         this.statuses = statuses;
         this.following = users;
     }

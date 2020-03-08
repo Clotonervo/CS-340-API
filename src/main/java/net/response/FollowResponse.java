@@ -2,14 +2,14 @@ package net.response;
 
 public class FollowResponse extends Response {
 
-    public FollowResponse(boolean success)
+    public FollowResponse()
     {
-        super(success);
+        super(true);
     }
 
-    public FollowResponse(boolean success, String message)
+    public FollowResponse(String message)
     {
-        super(success, message);
+        super(false, message);
     }
 
     @Override

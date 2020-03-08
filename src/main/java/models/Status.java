@@ -5,11 +5,11 @@ import java.util.*;
 
 public class Status {
 
-    private final User user;
-    private final String message;
-    private final List<String> userMentions;
-    private final List<String> links;
-    private final Timestamp timeStamp;
+    public User user;
+    public String message;
+    public List<String> userMentions;
+    public List<String> links;
+    public long timeStamp;
 
     public Status(User user, String message) {
         this.user = user;
@@ -18,8 +18,10 @@ public class Status {
         this.links = new ArrayList<>();
         findUserMentions();
         findLinks();
-        this.timeStamp = new Timestamp(System.currentTimeMillis());
+        this.timeStamp = new Timestamp(System.currentTimeMillis()).getTime();
     }
+
+    public Status(){}
 
     public User getUser() {
         return user;
@@ -29,7 +31,7 @@ public class Status {
         return message;
     }
 
-    public Timestamp getTimeStamp() {
+    public long getTimeStamp() {
         return timeStamp;
     }
 

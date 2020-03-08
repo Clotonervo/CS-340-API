@@ -5,9 +5,9 @@ import models.User;
 
 public class StoryRequest {
 
-    private User user;
-    private final int limit;
-    private Status lastStatus;
+    public User user;
+    public int limit;
+    public Status lastStatus;
 
 
     public StoryRequest(User user, int limit, Status lastStatus){
@@ -20,6 +20,8 @@ public class StoryRequest {
         this.user = user;
         this.limit = 0;
     }
+
+    public StoryRequest(){}
 
     public User getUser() {
         return user;

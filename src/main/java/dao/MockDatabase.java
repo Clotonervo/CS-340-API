@@ -111,8 +111,6 @@ public class MockDatabase {
             }
         });
 
-        System.out.println(hasMorePages);
-
 
         return new FollowingResponse(responseFollowees, hasMorePages);
     }
@@ -203,7 +201,7 @@ public class MockDatabase {
             if(loginRequest.getUsername().equals(allUsers.get(i).getAlias())
                     && (loginRequest.getPassword().equals("password")
                     || loginRequest.getPassword().equals("x"))){
-                return new LoginResponse("Login successful!", true, allUsers.get(i));
+                return new LoginResponse(allUsers.get(i));
             }
         }
         return new LoginResponse("Invalid credentials");
@@ -257,7 +255,7 @@ public class MockDatabase {
 
         if(signUpRequest.getFirstName() == null || signUpRequest.getLastName() == null
                 || signUpRequest.getPassword() == null || signUpRequest.getUsername() == null){
-            return new SignUpResponse("Not all forms filled out!", false);
+            return new SignUpResponse("Not all forms filled out!");
         }
 
 
@@ -266,12 +264,10 @@ public class MockDatabase {
 
         for (User user: allUsers) {
             if(user.getAlias().equals(signedUpUser.getAlias())){
-                return new SignUpResponse("Username already exists!", false);
+                return new SignUpResponse("Username already exists!");
             }
         }
 
-//        LoginService.getInstance().setCurrentUser(signedUpUser);          TODO: Fix this, we might have to return the user
-//        LoginService.getInstance().setLoggedInUser(signedUpUser);
         List<User> newUserFollowees = new ArrayList<>();
         List<User> newUserFollowers = new ArrayList<>();
 
@@ -300,7 +296,7 @@ public class MockDatabase {
         allUsers.add(signedUpUser);
 
 
-        return new SignUpResponse("Signed up successfully!", true);
+        return new SignUpResponse(signedUpUser);
     }
 
     /*
@@ -332,7 +328,7 @@ public class MockDatabase {
         }
 
 
-        return new StoryResponse("Good stuff", responseStatuses, hasMorePages, true);
+        return new StoryResponse(responseStatuses, hasMorePages);
     }
 
     private int getStoryStartingIndex(Status lastStatus, List<Status> allStatuses) {
@@ -386,19 +382,17 @@ public class MockDatabase {
 
         Collections.sort(feedResponse, new Comparator<Status>() {
             public int compare(Status o1, Status o2) {
-                return o2.getTimeStamp().compareTo(o1.getTimeStamp());
+                return Long.compare(o1.getTimeStamp(), o2.getTimeStamp());
             }
         });
 
 
-
-
-        return new FeedResponse(true, "No Error", hasMorePages, feedResponse, following);
+        return new FeedResponse(hasMorePages, feedResponse, following);
 
     }
 
 
-    private int getFeedStartingIndex(Status lastStatus, List<Status> allStatuses) {
+    private int getFeedStartingIndex(Status lastStatus, List<Status> allStatuses) {     //TODO: Check this to make sure its doing it's job
 
         int statusIndex = 0;
 
@@ -429,7 +423,7 @@ public class MockDatabase {
 
         Collections.sort(userStatuses.get(user), new Comparator<Status>() {
             public int compare(Status o1, Status o2) {
-                return o2.getTimeStamp().compareTo(o1.getTimeStamp());
+                return Long.compare(o1.getTimeStamp(), o2.getTimeStamp());
             }
         });
 
@@ -472,13 +466,13 @@ public class MockDatabase {
              --------------------- followUser
 
   */
-    public FollowResponse followUser(Follow follow){                //Should I resort the list alphabetically?
+    public FollowResponse followUser(Follow follow){
         if (userFollowing.get(follow.getFollower()).add(follow.getFollowee())
                 && userFollowers.get(follow.getFollowee()).add(follow.getFollower())){
-            return new FollowResponse(true, "User successfully followed");
+            return new FollowResponse();
         }
         else{
-            return new FollowResponse(false, "Something went wrong following user");
+            return new FollowResponse("Something went wrong following user");
         }
     }
 
@@ -508,10 +502,10 @@ public class MockDatabase {
             userFeeds.remove(follow.getFollower());
             userFeeds.put(follow.getFollower(), statusList);
 
-            return new UnfollowResponse(true, "User successfully unfollowed");
+            return new UnfollowResponse();
         }
         else{
-            return new UnfollowResponse(false, "Something went wrong unfollowing user");
+            return new UnfollowResponse("Something went wrong unfollowing user");
         }
     }
 

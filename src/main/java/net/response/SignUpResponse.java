@@ -1,28 +1,29 @@
 package net.response;
 
-public class SignUpResponse {
+import models.User;
 
-    private String message;
-    private boolean success;
+public class SignUpResponse extends Response{
 
-    public SignUpResponse(String message, boolean success) {
-        this.message = message;
-        this.success = success;
+    private User signedInUser;
+
+    public SignUpResponse(String message) {
+        super(false,message);
+    }
+
+    public SignUpResponse(User signedInUser){
+        super(true, null);
+        this.signedInUser = signedInUser;
     }
 
     public String getMessage() {
-        return message;
+        return super.getMessage();
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public User getSignedInUser() {
+        return signedInUser;
     }
 
     public boolean isSuccess() {
-        return success;
-    }
-
-    public void setError(boolean success) {
-        this.success = success;
+        return super.isSuccess();
     }
 }

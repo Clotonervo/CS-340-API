@@ -5,9 +5,9 @@ import models.User;
 
 public class FeedRequest {
 
-    private User user;
-    private Status lastStatus;
-    private final int limit;
+    public User user;
+    public Status lastStatus;
+    public int limit;
 
     public FeedRequest(User user, int limit, Status lastStatus){
         this.user = user;
@@ -19,6 +19,8 @@ public class FeedRequest {
         this.user = user;
         this.limit = 0;
     }
+
+    public FeedRequest(){}
 
     public User getUser() {
         return user;

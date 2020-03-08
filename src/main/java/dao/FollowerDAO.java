@@ -1,6 +1,8 @@
 package dao;
 
+import models.Follow;
 import net.request.FollowerRequest;
+import net.response.FollowResponse;
 import net.response.FollowerResponse;
 
 public class FollowerDAO {

@@ -6,11 +6,19 @@ import net.request.FollowerRequest;
 import net.response.FollowerResponse;
 import services.FollowerServiceImpl;
 
+import java.io.IOException;
+
 public class GetFollowerHandler implements RequestHandler<FollowerRequest, FollowerResponse> {
 
     @Override
     public FollowerResponse handleRequest(FollowerRequest request, Context context) {
         FollowerServiceImpl service = new FollowerServiceImpl();
-        return service.getFollowers(request);
+        try {
+            FollowerResponse response = service.getFollowers(request);
+            return response;
+        }
+        catch (IOException x){
+            return new FollowerResponse(x.getMessage());
+        }
     }
 }

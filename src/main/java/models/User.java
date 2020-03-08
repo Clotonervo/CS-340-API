@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class User implements Comparable<User> {
 
-    private final String firstName;
-    private final String lastName;
-    private final String alias;
-    private final String imageUrl;
+    public String firstName;
+    public String lastName;
+    public String alias;
+    public String imageUrl;
 
     public User(String firstName, String lastName, String imageURL) {
         this(firstName, lastName, String.format("@%s%s", firstName, lastName), imageURL);
@@ -24,6 +24,8 @@ public class User implements Comparable<User> {
         }
         this.imageUrl = imageURL;
     }
+
+    public User(){}
 
     public String getFirstName() {
         return firstName;

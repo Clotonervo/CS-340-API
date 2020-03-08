@@ -2,8 +2,8 @@ package net.response;
 
 class Response {
 
-    private final boolean success;
-    private final String message;
+    public final boolean success;
+    public final String message;
 
     Response(boolean success) {
         this(success, null);

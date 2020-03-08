@@ -1,5 +1,7 @@
 package net.request;
 
+import net.response.SignUpResponse;
+
 public class SignUpRequest {
 
     private String username;
@@ -18,6 +20,8 @@ public class SignUpRequest {
             this.image = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
         }
     }
+
+    public SignUpRequest(){}
 
     public String getUsername() {
         return username;

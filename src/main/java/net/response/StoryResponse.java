@@ -7,45 +7,21 @@ import java.util.List;
 
 public class StoryResponse extends PagedResponse {
 
-    private String message;
     private List<Status> statusList;
-    private boolean error;
 
-    public StoryResponse(String message, List<Status> statusList, boolean error, boolean hasMorePages) {
-        super(true, hasMorePages);
-
-        this.message = message;
+    public StoryResponse(List<Status> statusList, boolean hasMorePages) {
+        super(true, null, hasMorePages);
         this.statusList = statusList;
-        this.error = error;
+    }
+
+    public StoryResponse(String message){
+        super(false, message, true);
+        this.statusList = null;
     }
 
     public String getMessage()
     {
-        return message;
+        return super.getMessage();
     }
-
-    public void setMessage(String message)
-    {
-        this.message = message;
-    }
-
-    public List<Status> getStatusList()
-    {
-        return statusList;
-    }
-
-    public void setStatusList(List<Status> statusList)
-    {
-        this.statusList = statusList;
-    }
-
-    public boolean isError()
-    {
-        return error;
-    }
-
-    public void setError(boolean error)
-    {
-        this.error = error;
-    }
+    public boolean isSuccess(){ return super.isSuccess(); }
 }

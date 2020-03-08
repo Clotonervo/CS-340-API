@@ -8,7 +8,6 @@ import java.util.List;
 public class FollowingResponse extends PagedResponse {
 
     private List<User> followees;
-    private boolean hasMorePages;
 
     public FollowingResponse(String message) {
         super(false, message, false);
@@ -16,7 +15,6 @@ public class FollowingResponse extends PagedResponse {
 
     public FollowingResponse(List<User> followees, boolean hasMorePages) {
         super(true, hasMorePages);
-        this.hasMorePages = hasMorePages;                                       //TODO: Figure out why this is not returning
         this.followees = followees;
     }
 
