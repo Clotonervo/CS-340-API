@@ -386,13 +386,16 @@ public class MockDatabase {
             }
         });
 
+        if(following == null){
+            following = new ArrayList<>();
+        }
 
         return new FeedResponse(hasMorePages, feedResponse, following);
 
     }
 
 
-    private int getFeedStartingIndex(Status lastStatus, List<Status> allStatuses) {     //TODO: Check this to make sure its doing it's job
+    private int getFeedStartingIndex(Status lastStatus, List<Status> allStatuses) {
 
         int statusIndex = 0;
 
@@ -437,7 +440,7 @@ public class MockDatabase {
         }
 
 
-        return new PostResponse(true, "Post successfully posted!");
+        return new PostResponse(true, "Successfully posted!");
     }
 
 
@@ -512,76 +515,9 @@ public class MockDatabase {
     /*
              --------------------- sign out User
      */
-    public void signOutUser(){
+    public SignOutResponse signOutUser(){
         //Communicate with back end to destroy auth tokens
+        return new SignOutResponse(true, "Signout complete!");
     }
 
-
-    /*
-    Getters and setter for testing
- */
-    public static void setInstance(MockDatabase instance)
-    {
-        MockDatabase.instance = instance;
-    }
-
-    public static Map<User, List<User>> getUserFollowing()
-    {
-        return userFollowing;
-    }
-
-    public static void setUserFollowing(Map<User, List<User>> userFollowing)
-    {
-        MockDatabase.userFollowing = userFollowing;
-    }
-
-    public static Map<User, List<User>> getUserFollowers()
-    {
-        return userFollowers;
-    }
-
-    public static void setUserFollowers(Map<User, List<User>> userFollowers)
-    {
-        MockDatabase.userFollowers = userFollowers;
-    }
-
-    public static List<Follow> getFollows()
-    {
-        return follows;
-    }
-
-    public static void setFollows(List<Follow> follows)
-    {
-        MockDatabase.follows = follows;
-    }
-
-    public static Map<User, List<Status>> getUserStatuses()
-    {
-        return userStatuses;
-    }
-
-    public static void setUserStatuses(Map<User, List<Status>> userStatuses)
-    {
-        MockDatabase.userStatuses = userStatuses;
-    }
-
-    public static Map<User, List<Status>> getUserFeeds()
-    {
-        return userFeeds;
-    }
-
-    public static void setUserFeeds(Map<User, List<Status>> userFeeds)
-    {
-        MockDatabase.userFeeds = userFeeds;
-    }
-
-    public static List<User> getAllUsers()
-    {
-        return allUsers;
-    }
-
-    public static void setAllUsers(List<User> allUsers)
-    {
-        MockDatabase.allUsers = allUsers;
-    }
 }
