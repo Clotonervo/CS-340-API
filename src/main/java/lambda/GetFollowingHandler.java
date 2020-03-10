@@ -31,7 +31,7 @@ public class GetFollowingHandler implements RequestHandler<FollowingRequest, Fol
             return response;
         }
         catch (IOException x){
-            return new FollowingResponse(x.getMessage());           //TODO: Figure out the database error thing [DBError] for 500 errors
+            return new FollowingResponse(x.getMessage());           //TODO: Put [DBError] thing in all services
         }
     }
 }

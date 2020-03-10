@@ -17,8 +17,7 @@ public class GetFeedHandler implements RequestHandler<FeedRequest, FeedResponse>
             return response;
         }
         catch (IOException x){
-            FeedResponse errorResponse = new FeedResponse(x.getMessage());
-            return errorResponse;
+            return new FeedResponse(x.getMessage());
         }
     }
 

@@ -8,6 +8,7 @@ public class FeedRequest {
     public User user;
     public Status lastStatus;
     public int limit;
+    public String authToken;
 
     public FeedRequest(User user, int limit, Status lastStatus){
         this.user = user;
@@ -43,5 +44,13 @@ public class FeedRequest {
     public int getLimit()
     {
         return limit;
+    }
+
+    public String getAuthToken() {
+        return this.authToken;
+    }
+
+    public void setAuthToken(String auth) {
+        this.authToken = auth;
     }
 }

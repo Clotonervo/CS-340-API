@@ -4,6 +4,7 @@ import models.Follow;
 import net.request.FollowerRequest;
 import net.response.FollowResponse;
 import net.response.FollowerResponse;
+import net.response.IsFollowingResponse;
 
 public class FollowerDAO {
 

@@ -3,6 +3,7 @@ package dao;
 import models.Follow;
 import models.services.UnfollowService;
 import net.response.FollowResponse;
+import net.response.IsFollowingResponse;
 import net.response.UnfollowResponse;
 
 public class FollowDAO {
@@ -19,5 +20,9 @@ public class FollowDAO {
 
     public UnfollowResponse unfollowUser(Follow follow) {
         return mockDatabase.unfollowUser(follow);
+    }
+
+    public IsFollowingResponse isFollowing(Follow follow) {
+        return mockDatabase.isFollowing(follow);
     }
 }

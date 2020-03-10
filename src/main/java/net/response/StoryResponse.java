@@ -19,6 +19,10 @@ public class StoryResponse extends PagedResponse {
         this.statusList = null;
     }
 
+    public List<Status> getStatusList() {
+        return statusList;
+    }
+
     public String getMessage()
     {
         return super.getMessage();

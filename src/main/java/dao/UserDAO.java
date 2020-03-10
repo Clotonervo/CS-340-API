@@ -5,6 +5,7 @@ import net.request.LoginRequest;
 import net.request.SignUpRequest;
 import net.response.LoginResponse;
 import net.response.SignUpResponse;
+import net.response.UserAliasResponse;
 
 public class UserDAO {
     private MockDatabase mockDatabase;
@@ -21,7 +22,7 @@ public class UserDAO {
         return mockDatabase.registerNewUser(request);
     }
 
-    public User aliasToUser(String alias){
+    public UserAliasResponse aliasToUser(String alias){
         return mockDatabase.aliasToUser(alias);
     }
 }

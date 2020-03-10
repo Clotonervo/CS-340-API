@@ -4,13 +4,12 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import models.Follow;
 import models.services.FollowService;
-import net.request.FollowerRequest;
 import net.response.FollowResponse;
 import services.FollowServiceImpl;
 
 import java.io.IOException;
 
-public class FollowUserHandler implements RequestHandler<Follow, FollowResponse> {
+public class FollowUserHandler implements RequestHandler<Follow, FollowResponse> {      //TODO: Tests, test that its calling the right methods
 
     @Override
     public FollowResponse handleRequest(Follow follow, Context context) {
