@@ -15,6 +15,11 @@ public class UserAliasResponse extends Response {
         this.user = null;
     }
 
+    public UserAliasResponse(){
+            super(true);
+            this.user = null;
+    }
+
     public User getUser(){
         return this.user;
     }

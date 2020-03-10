@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class IsFollowingHandler implements RequestHandler<Follow, IsFollowingResponse> {
     @Override
-    public IsFollowingResponse handleRequest(Follow input, Context context) {
+    public IsFollowingResponse handleRequest(Follow input, Context context) {       //TODO: FIX THIS
         FollowService followService = new FollowServiceImpl();
         try {
             IsFollowingResponse response = followService.isFollowing(input);

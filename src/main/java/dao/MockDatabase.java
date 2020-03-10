@@ -54,14 +54,14 @@ public class MockDatabase {
         assert request.getLimit() >= 0;
         assert request.getFollower() != null;
 
-        List<User> allFollowers = userFollowers.get(aliasToUser(request.getFollower()).getUser());
+        List<User> allFollowers = userFollowers.get(aliasToUser(request.getFollower(), true));
         List<User> responseFollowers = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;
 
         if(request.getLimit() > 0) {
             if (allFollowers != null) {
-                int followeesIndex = getFolloweesStartingIndex(aliasToUser(request.getLastFollowee()).getUser(), allFollowers);
+                int followeesIndex = getFolloweesStartingIndex(aliasToUser(request.getLastFollowee(), true), allFollowers);
 
                 for(int limitCounter = 0; followeesIndex < allFollowers.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
                     responseFollowers.add(allFollowers.get(followeesIndex));
@@ -73,9 +73,10 @@ public class MockDatabase {
 
         Collections.sort(responseFollowers, new Comparator<User>() {
             public int compare(User o1, User o2) {
-                return o1.getFirstName().compareTo(o1.getFirstName());
+                return o1.getFirstName().compareTo(o2.getFirstName());
             }
         });
+
 
         return new FollowerResponse(responseFollowers, hasMorePages);
     }
@@ -90,7 +91,7 @@ public class MockDatabase {
         assert request.getFollower() != null;
 
 
-        List<User> allFollowees = userFollowing.get(aliasToUser(request.getFollower()).getUser());
+        List<User> allFollowees = userFollowing.get(aliasToUser(request.getFollower(), true));
         List<User> responseFollowees = new ArrayList<>(request.getLimit());
 
 
@@ -98,7 +99,7 @@ public class MockDatabase {
 
         if(request.getLimit() > 0) {
             if (allFollowees != null) {
-                int followeesIndex = getFolloweesStartingIndex(aliasToUser(request.getLastFollowee()).getUser(), allFollowees);
+                int followeesIndex = getFolloweesStartingIndex(aliasToUser(request.getLastFollowee(), true), allFollowees);
 
                 for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
                     responseFollowees.add(allFollowees.get(followeesIndex));
@@ -110,7 +111,7 @@ public class MockDatabase {
 
         Collections.sort(responseFollowees, new Comparator<User>() {
             public int compare(User o1, User o2) {
-                return o2.getFirstName().compareTo(o1.getFirstName());
+                return o1.getFirstName().compareTo(o2.getFirstName());
             }
         });
 
@@ -155,6 +156,14 @@ public class MockDatabase {
 
         follows = getFollowGenerator().generateUsersAndFollows(100,
                 0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
+        User a = new User("AA", "A", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        User aa = new User("A", "A", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+
+        follows.add(0, new Follow(a, aa));
+        follows.add(0, new Follow(aa, a));
+        follows.add(0, new Follow(testUser,a));
+        follows.add(0, new Follow(a,testUser));
+        follows.add(0,new Follow(aa,testUser));
 
 
         // Populate a map of followees, keyed by follower so we can easily handle followee requests
@@ -188,6 +197,8 @@ public class MockDatabase {
 
         userFollowing.put(tweeterBot, thing);
         userFollowers.put(tweeterBot, thing);
+
+        System.out.println(userFollowers.get(a));
 
         return;
     }
@@ -229,6 +240,9 @@ public class MockDatabase {
             for(int i = 1; i < 5; i++){
                 statusList.add(new Status(currentUser, "Test status " + i));
             }
+            statusList.add(new Status(currentUser, "www.google.com "));
+            statusList.add(new Status(currentUser, "@AA"));
+
             userStatuses.put(currentUser, statusList);
         }
 
@@ -447,7 +461,6 @@ public class MockDatabase {
 
         }
 
-
         return new PostResponse(true, "Successfully posted!");
     }
 
@@ -462,9 +475,17 @@ public class MockDatabase {
                 return new UserAliasResponse(entry.getKey());
             }
         }
-        return null;
+        return new UserAliasResponse();
     }
 
+    private User aliasToUser(String alias, boolean test){
+        for (Map.Entry<User, List<User>> entry : userFollowing.entrySet()) {
+            if(entry.getKey().getAlias().equals(alias)){
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
     /*
              --------------------- isFollowing
 
