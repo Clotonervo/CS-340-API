@@ -8,6 +8,8 @@ public class StoryRequest {
     public User user;
     public int limit;
     public Status lastStatus;
+    public String authToken;
+
 
 
     public StoryRequest(User user, int limit, Status lastStatus){
@@ -41,5 +43,9 @@ public class StoryRequest {
 
     public void setLastStatus(Status lastStatus) {
         this.lastStatus = lastStatus;
+    }
+
+    public String getAuthToken() {
+        return authToken;
     }
 }

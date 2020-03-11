@@ -6,6 +6,8 @@ public class FollowerRequest {
     public String followee;
     public int limit;
     public String lastFollower;
+    public String authToken;
+
 
     public FollowerRequest(String followee, int limit, String lastFollower) {
         this.followee = followee;
@@ -25,5 +27,9 @@ public class FollowerRequest {
 
     public String getLastFollowee() {
         return lastFollower;
+    }
+
+    public String getAuthToken() {
+        return authToken;
     }
 }

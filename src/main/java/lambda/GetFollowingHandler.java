@@ -26,12 +26,21 @@ public class GetFollowingHandler implements RequestHandler<FollowingRequest, Fol
     @Override
     public FollowingResponse handleRequest(FollowingRequest request, Context context) {
         FollowingServiceImpl service = new FollowingServiceImpl();
+
+        if(request.getAuthToken() == null){
+            return new FollowingResponse("[ClientError]: Authorization Token not found");
+        }
+
+        if(!request.getAuthToken().equals("Test")){
+            return new FollowingResponse("[ClientError]: Authorization Token invalid: " + request.getAuthToken());
+        }
+
         try {
             FollowingResponse response = service.getFollowees(request);
             return response;
         }
         catch (IOException x){
-            return new FollowingResponse(x.getMessage());           //TODO: Put [DBError] thing in all services
+            return new FollowingResponse("[DBError]: " + x.getMessage());
         }
     }
 }

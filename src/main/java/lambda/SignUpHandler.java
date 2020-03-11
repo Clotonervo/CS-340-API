@@ -18,7 +18,7 @@ public class SignUpHandler implements RequestHandler<SignUpRequest, SignUpRespon
             return response;
         }
         catch(IOException x){
-            return new SignUpResponse(x.getMessage());
+            return new SignUpResponse("[DBError]:" + x.getMessage());
         }
     }
 }

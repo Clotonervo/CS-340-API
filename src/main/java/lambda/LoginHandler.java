@@ -16,10 +16,11 @@ public class LoginHandler implements RequestHandler<LoginRequest, LoginResponse>
         LoginService loginService = new LoginServiceImpl();
         try {
             LoginResponse response = loginService.login(request);
+            response.setAuthToken("Test");
             return response;
         }
         catch (IOException x){
-            return new LoginResponse(x.getMessage());
+            return new LoginResponse("[DBError]: " + x.getMessage());
         }
     }
 }

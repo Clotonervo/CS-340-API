@@ -14,12 +14,21 @@ public class GetStoryHandler implements RequestHandler<StoryRequest, StoryRespon
     @Override
     public StoryResponse handleRequest(StoryRequest request, Context context) {
         StoryService storyService = new StoryServiceImpl();
+
+        if(request.getAuthToken() == null){
+            return new StoryResponse("[ClientError]: Authorization Token not found");
+        }
+
+        if(!request.getAuthToken().equals("Test")){
+            return new StoryResponse("[ClientError]: Authorization Token invalid: " + request.getAuthToken());
+        }
+
         try {
             StoryResponse response = storyService.getStory(request);
             return response;
         }
         catch (IOException x){
-            return new StoryResponse(x.getMessage());
+            return new StoryResponse("[DBError]: " + x.getMessage());
         }
     }
 }

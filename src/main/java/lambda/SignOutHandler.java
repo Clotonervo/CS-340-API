@@ -18,7 +18,7 @@ public class SignOutHandler implements RequestHandler<String, SignOutResponse> {
             return response;
         }
         catch (IOException x){
-            return new SignOutResponse(false, x.getMessage());
+            return new SignOutResponse(false, "[DBError]:" + x.getMessage());
         }
     }
 }
