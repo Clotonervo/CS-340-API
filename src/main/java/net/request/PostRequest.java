@@ -6,7 +6,7 @@ public class PostRequest {
     public Status status;
     public String authToken;
 
-    PostRequest(){}
+    public PostRequest(){}
 
     public Status getStatus() {
         return status;

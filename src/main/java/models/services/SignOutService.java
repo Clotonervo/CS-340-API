@@ -5,5 +5,5 @@ import net.response.SignOutResponse;
 import java.io.IOException;
 
 public interface SignOutService {
-    SignOutResponse signOut() throws IOException;
+    SignOutResponse signOut(String alias) throws IOException;
 }

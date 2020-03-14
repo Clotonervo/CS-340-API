@@ -7,7 +7,12 @@ public class UnfollowRequest {
     public Follow follow;
     public String authToken;
 
-    UnfollowRequest(){}
+    public UnfollowRequest(){}
+
+    public UnfollowRequest(Follow follow, String authToken) {
+        this.follow = follow;
+        this.authToken = authToken;
+    }
 
     public Follow getFollow() {
         return follow;

@@ -2,9 +2,11 @@ package lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import models.services.AuthorizationService;
 import models.services.UserAliasService;
 import net.request.UserAliasRequest;
 import net.response.UserAliasResponse;
+import services.AuthorizationServiceImpl;
 import services.UserAliasServiceImpl;
 
 import java.io.IOException;
@@ -13,13 +15,14 @@ public class UserAliasHandler implements RequestHandler<UserAliasRequest, UserAl
     @Override
     public UserAliasResponse handleRequest(UserAliasRequest input, Context context) {
         UserAliasService userAliasService = new UserAliasServiceImpl();
+        AuthorizationService authorizationService = new AuthorizationServiceImpl();
 
         if(input.getAuthToken() == null){
-            return new UserAliasResponse("[ClientError]: Authorization Token not found");
+            throw new RuntimeException("[ClientError] Authorization Token not found");
         }
 
-        if(!input.getAuthToken().equals("Test")){
-            return new UserAliasResponse("[ClientError]: Authorization Token invalid: " + input.getAuthToken());
+        if(!authorizationService.isValid(input.getAuthToken())){
+            throw new RuntimeException("[ClientError] Authorization Token invalid: " + input.getAuthToken());
         }
 
         try {
@@ -27,7 +30,7 @@ public class UserAliasHandler implements RequestHandler<UserAliasRequest, UserAl
             return response;
         }
         catch (IOException x){
-            return new UserAliasResponse("[DBError]: " + x.getMessage());
+            throw new RuntimeException("[DBError] " + x.getMessage());
         }
     }
 }

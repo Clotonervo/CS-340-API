@@ -8,8 +8,8 @@ import java.io.IOException;
 
 public class SignOutServiceImpl implements SignOutService {
     @Override
-    public SignOutResponse signOut() throws IOException {
+    public SignOutResponse signOut(String alias) throws IOException {
         AuthDAO authDAO = new AuthDAO();
-        return authDAO.signOut();
+        return authDAO.signOut(alias);
     }
 }

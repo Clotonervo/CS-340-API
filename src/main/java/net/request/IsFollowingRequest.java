@@ -6,7 +6,7 @@ public class IsFollowingRequest {
     public Follow follow;
     public String authToken;
 
-    IsFollowingRequest(){}
+    public IsFollowingRequest(){}
 
     public Follow getFollow() {
         return follow;

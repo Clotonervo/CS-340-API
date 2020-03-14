@@ -5,6 +5,7 @@ import models.User;
 public class SignUpResponse extends Response{
 
     private User signedInUser;
+    private String authToken;
 
     public SignUpResponse(String message) {
         super(false,message);
@@ -25,5 +26,13 @@ public class SignUpResponse extends Response{
 
     public boolean isSuccess() {
         return super.isSuccess();
+    }
+
+    public String getAuthToken(){
+        return this.authToken;
+    }
+
+    public void setAuthToken(String authToken){
+        this.authToken = authToken;
     }
 }

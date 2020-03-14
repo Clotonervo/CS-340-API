@@ -7,7 +7,12 @@ public class FollowRequest {
     public Follow follow;
     public String authToken;
 
-    FollowRequest(){}
+    public FollowRequest(){}
+
+    public FollowRequest(Follow follow, String authToken) {
+        this.follow = follow;
+        this.authToken = authToken;
+    }
 
     public Follow getFollow() {
         return follow;

@@ -77,6 +77,10 @@ public class MockDatabase {
             }
         });
 
+        if(responseFollowers.size() == 0){
+            return new FollowerResponse("User has no followers!");
+        }
+
 
         return new FollowerResponse(responseFollowers, hasMorePages);
     }
@@ -114,6 +118,10 @@ public class MockDatabase {
                 return o1.getFirstName().compareTo(o2.getFirstName());
             }
         });
+
+        if(responseFollowees.size() == 0){
+            return new FollowingResponse("User has no followers!");
+        }
 
 
         return new FollowingResponse(responseFollowees, hasMorePages);
@@ -198,7 +206,6 @@ public class MockDatabase {
         userFollowing.put(tweeterBot, thing);
         userFollowers.put(tweeterBot, thing);
 
-        System.out.println(userFollowers.get(a));
 
         return;
     }
@@ -246,7 +253,7 @@ public class MockDatabase {
             userStatuses.put(currentUser, statusList);
         }
 
-        userStatuses.put(tweeterBot, new ArrayList<Status>());
+//        userStatuses.put(tweeterBot, new ArrayList<Status>());
 
     }
 
@@ -257,12 +264,18 @@ public class MockDatabase {
     private void initializeFeeds(){
 
         userFeeds = new HashMap<>();
+//        System.out.println(userStatuses);
 
         for (Map.Entry<User, List<User>> entry : userFollowing.entrySet()) {
             User currentUser = entry.getKey();
             List<Status> statusList = new ArrayList<>();
             for (User following: entry.getValue()) {
-                statusList.addAll(userStatuses.get(following));
+                if(userStatuses.get(following) != null) {
+                    for (int i = 0; i < userStatuses.get(following).size(); i++) {
+                        statusList.add(userStatuses.get(following).get(i));
+
+                    }
+                }
             }
             userFeeds.put(currentUser, statusList);
         }
@@ -347,8 +360,9 @@ public class MockDatabase {
                 hasMorePages = storyIndex < statusList.size();
             }
         }
-
-        System.out.println(responseStatuses);
+        if(responseStatuses.size() == 0){
+            return new StoryResponse("User has no Statuses!");
+        }
 
         return new StoryResponse(responseStatuses, hasMorePages);
     }
@@ -409,7 +423,7 @@ public class MockDatabase {
         });
 
         if(following == null){
-            following = new ArrayList<>();
+            return new FeedResponse("User has no followees!");
         }
 
         return new FeedResponse(hasMorePages, feedResponse, following);
@@ -443,6 +457,9 @@ public class MockDatabase {
   */
     public PostResponse post(Status postedStatus){
         User user = postedStatus.getUser();
+        if(userStatuses.get(user) == null){
+            return new PostResponse(false, "Invalid User!");
+        }
 
         userStatuses.get(user).add(postedStatus);
 
@@ -470,12 +487,13 @@ public class MockDatabase {
 
       */
     public UserAliasResponse aliasToUser(String alias){
+//        System.out.println(alias);
         for (Map.Entry<User, List<User>> entry : userFollowing.entrySet()) {
             if(entry.getKey().getAlias().equals(alias)){
                 return new UserAliasResponse(entry.getKey());
             }
         }
-        return new UserAliasResponse();
+        return new UserAliasResponse("User not found!");
     }
 
     private User aliasToUser(String alias, boolean test){
@@ -491,6 +509,9 @@ public class MockDatabase {
 
   */
     public IsFollowingResponse isFollowing(Follow follow){
+        if(userFollowing.get(follow.getFollower()) == null){
+            return new IsFollowingResponse("Invalid User!");
+        }
         boolean following = userFollowing.get(follow.getFollower()).contains(follow.getFollowee());
         return new IsFollowingResponse(following);
     }
@@ -500,6 +521,9 @@ public class MockDatabase {
 
   */
     public FollowResponse followUser(Follow follow){
+        if((aliasToUser(follow.followee.getAlias(), true) == null) || aliasToUser(follow.follower.getAlias(), true) == null){
+            return new FollowResponse("User doesn't exist!");
+        }
         if (userFollowing.get(follow.getFollower()).add(follow.getFollowee())
                 && userFollowers.get(follow.getFollowee()).add(follow.getFollower())){
             return new FollowResponse();
@@ -515,6 +539,10 @@ public class MockDatabase {
 
   */
     public UnfollowResponse unfollowUser(Follow follow){
+
+        if((aliasToUser(follow.followee.getAlias(), true) == null) || aliasToUser(follow.follower.getAlias(), true) == null){
+            return new UnfollowResponse("User doesn't exist!");
+        }
 
         if (userFollowing.get(follow.getFollower()).remove(follow.getFollowee())
                 && userFollowers.get(follow.getFollowee()).remove(follow.getFollower())){
@@ -545,8 +573,11 @@ public class MockDatabase {
     /*
              --------------------- sign out User
      */
-    public SignOutResponse signOutUser(){
+    public SignOutResponse signOutUser(String alias){
         //Communicate with back end to destroy auth tokens
+        if(!allUsers.contains(aliasToUser(alias, true))){
+            return new SignOutResponse(false, "Invalid User Session!");
+        }
         return new SignOutResponse(true, "Signout complete!");
     }
 

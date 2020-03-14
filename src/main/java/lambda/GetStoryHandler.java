@@ -2,9 +2,11 @@ package lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import models.services.AuthorizationService;
 import models.services.StoryService;
 import net.request.StoryRequest;
 import net.response.StoryResponse;
+import services.AuthorizationServiceImpl;
 import services.StoryServiceImpl;
 
 import java.io.IOException;
@@ -14,13 +16,15 @@ public class GetStoryHandler implements RequestHandler<StoryRequest, StoryRespon
     @Override
     public StoryResponse handleRequest(StoryRequest request, Context context) {
         StoryService storyService = new StoryServiceImpl();
+        AuthorizationService authorizationService = new AuthorizationServiceImpl();
+
 
         if(request.getAuthToken() == null){
-            return new StoryResponse("[ClientError]: Authorization Token not found");
+            throw new RuntimeException("[ClientError] Authorization Token not found");
         }
 
-        if(!request.getAuthToken().equals("Test")){
-            return new StoryResponse("[ClientError]: Authorization Token invalid: " + request.getAuthToken());
+        if(!authorizationService.isValid(request.getAuthToken())){
+            throw new RuntimeException("[ClientError] Authorization Token invalid: " + request.getAuthToken());
         }
 
         try {
@@ -28,7 +32,7 @@ public class GetStoryHandler implements RequestHandler<StoryRequest, StoryRespon
             return response;
         }
         catch (IOException x){
-            return new StoryResponse("[DBError]: " + x.getMessage());
+            throw new RuntimeException("[DBError] " + x.getMessage());
         }
     }
 }

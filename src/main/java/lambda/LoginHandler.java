@@ -2,9 +2,11 @@ package lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import models.services.AuthorizationService;
 import models.services.LoginService;
 import net.request.LoginRequest;
 import net.response.LoginResponse;
+import services.AuthorizationServiceImpl;
 import services.LoginServiceImpl;
 
 import java.io.IOException;
@@ -12,15 +14,19 @@ import java.io.IOException;
 public class LoginHandler implements RequestHandler<LoginRequest, LoginResponse> {
 
     @Override
-    public LoginResponse handleRequest(LoginRequest request, Context context) {     //TODO: Authtokens
+    public LoginResponse handleRequest(LoginRequest request, Context context) {
         LoginService loginService = new LoginServiceImpl();
+        AuthorizationService authorizationService = new AuthorizationServiceImpl();
+
         try {
             LoginResponse response = loginService.login(request);
-            response.setAuthToken("Test");
+            if(response.isSuccess()) {
+                response.setAuthToken(authorizationService.generateAuthToken());
+            }
             return response;
         }
         catch (IOException x){
-            return new LoginResponse("[DBError]: " + x.getMessage());
+            throw new RuntimeException("[DBError] " + x.getMessage());
         }
     }
 }

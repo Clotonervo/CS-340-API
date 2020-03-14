@@ -2,9 +2,11 @@ package lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import models.services.AuthorizationService;
 import models.services.PostService;
 import net.request.PostRequest;
 import net.response.PostResponse;
+import services.AuthorizationServiceImpl;
 import services.PostServiceImpl;
 
 import java.io.IOException;
@@ -13,13 +15,13 @@ public class PostHandler implements RequestHandler<PostRequest, PostResponse> {
     @Override
     public PostResponse handleRequest(PostRequest input, Context context) {
         PostService postService = new PostServiceImpl();
-
+        AuthorizationService authorizationService = new AuthorizationServiceImpl();
         if(input.getAuthToken() == null){
-            return new PostResponse(false, "[ClientError]: Authorization Token not found");
+            throw new RuntimeException("[ClientError] Authorization Token not found");
         }
 
-        if(!input.getAuthToken().equals("Test")){
-            return new PostResponse(false, "[ClientError]: Authorization Token invalid: " + input.getAuthToken());
+        if(!authorizationService.isValid(input.getAuthToken())){
+            throw new RuntimeException("[ClientError] Authorization Token invalid: " + input.getAuthToken());
         }
 
         try {
@@ -27,7 +29,7 @@ public class PostHandler implements RequestHandler<PostRequest, PostResponse> {
             return response;
         }
         catch (IOException x){
-            return new PostResponse(false, "[DBError]: " + x.getMessage());
+            throw new RuntimeException("[DBError] " + x.getMessage());
         }
     }
 }

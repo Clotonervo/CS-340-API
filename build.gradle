@@ -19,6 +19,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ses
     compile group: 'com.amazonaws', name: 'aws-java-sdk-ses', version: '1.11.737'
 
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
+
     compile 'io.jsonwebtoken:jjwt-api:0.11.0'
     runtime 'io.jsonwebtoken:jjwt-impl:0.11.0',
             // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:

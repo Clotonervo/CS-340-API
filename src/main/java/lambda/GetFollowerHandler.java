@@ -2,8 +2,10 @@ package lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import models.services.AuthorizationService;
 import net.request.FollowerRequest;
 import net.response.FollowerResponse;
+import services.AuthorizationServiceImpl;
 import services.FollowerServiceImpl;
 
 import java.io.IOException;
@@ -13,13 +15,15 @@ public class GetFollowerHandler implements RequestHandler<FollowerRequest, Follo
     @Override
     public FollowerResponse handleRequest(FollowerRequest request, Context context) {
         FollowerServiceImpl service = new FollowerServiceImpl();
+        AuthorizationService authorizationService = new AuthorizationServiceImpl();
+
 
         if(request.getAuthToken() == null){
-            return new FollowerResponse("[ClientError]: Authorization Token not found");
+            throw new RuntimeException("[ClientError] Authorization Token not found");
         }
 
-        if(!request.getAuthToken().equals("Test")){
-            return new FollowerResponse("[ClientError]: Authorization Token invalid: " + request.getAuthToken());
+        if(!authorizationService.isValid(request.getAuthToken())){
+            throw new RuntimeException("[ClientError] Authorization Token invalid: " + request.getAuthToken());
         }
 
         try {
@@ -27,7 +31,7 @@ public class GetFollowerHandler implements RequestHandler<FollowerRequest, Follo
             return response;
         }
         catch (IOException x){
-            return new FollowerResponse("[DBError]: " + x.getMessage());
+            throw new RuntimeException("[DBError] " + x.getMessage());
         }
     }
 }

@@ -1,7 +1,9 @@
 package lambda;
 
+import models.services.AuthorizationService;
 import net.request.FollowingRequest;
 import net.response.FollowingResponse;
+import services.AuthorizationServiceImpl;
 import services.FollowingServiceImpl;
 
 import com.amazonaws.services.lambda.runtime.Context;
@@ -26,13 +28,14 @@ public class GetFollowingHandler implements RequestHandler<FollowingRequest, Fol
     @Override
     public FollowingResponse handleRequest(FollowingRequest request, Context context) {
         FollowingServiceImpl service = new FollowingServiceImpl();
+        AuthorizationService authorizationService = new AuthorizationServiceImpl();
 
         if(request.getAuthToken() == null){
-            return new FollowingResponse("[ClientError]: Authorization Token not found");
+            throw new RuntimeException("[ClientError] Authorization Token not found");
         }
 
-        if(!request.getAuthToken().equals("Test")){
-            return new FollowingResponse("[ClientError]: Authorization Token invalid: " + request.getAuthToken());
+        if(!authorizationService.isValid(request.getAuthToken())){
+            throw new RuntimeException("[ClientError] Authorization Token invalid: " + request.getAuthToken());
         }
 
         try {
@@ -40,7 +43,7 @@ public class GetFollowingHandler implements RequestHandler<FollowingRequest, Fol
             return response;
         }
         catch (IOException x){
-            return new FollowingResponse("[DBError]: " + x.getMessage());
+            throw new RuntimeException("[DBError] " + x.getMessage());
         }
     }
 }
