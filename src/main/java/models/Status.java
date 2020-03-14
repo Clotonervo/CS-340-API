@@ -45,6 +45,20 @@ public class Status {
         return links;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
+
+        obj = (Status) obj;
+        if(((Status) obj).getUser().getAlias().equals(this.getUser().getAlias())
+            && ((Status) obj).getMessage().equals(this.getMessage())){
+            return true;
+        }
+        return false;
+    }
+
     private void findUserMentions(){
         int numMentions = message.length() - message.replace("@", "").length();
         if (!(numMentions <= 0)){
