@@ -6,6 +6,9 @@ import models.User;
 import net.request.*;
 import net.response.*;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class MockDatabase {
@@ -94,7 +97,6 @@ public class MockDatabase {
         assert request.getLimit() >= 0;
         assert request.getFollower() != null;
 
-
         List<User> allFollowees = userFollowing.get(aliasToUser(request.getFollower(), true));
         List<User> responseFollowees = new ArrayList<>(request.getLimit());
 
@@ -108,7 +110,8 @@ public class MockDatabase {
                 for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
                     responseFollowees.add(allFollowees.get(followeesIndex));
                 }
-
+                System.out.println(followeesIndex);
+                System.out.println(allFollowees.size());
                 hasMorePages = followeesIndex < allFollowees.size();
             }
         }
@@ -135,6 +138,7 @@ public class MockDatabase {
     private int getFolloweesStartingIndex(User lastFollowee, List<User> allFollowees) {
 
         int followeesIndex = 0;
+        System.out.println(lastFollowee);
 
         if(lastFollowee != null) {
             // This is a paged request for something after the first page. Find the first item
@@ -221,10 +225,19 @@ public class MockDatabase {
     }
 
     public LoginResponse authenticateUser(LoginRequest loginRequest){                   //When backend is up, authenticate password with username there
+        String passwordString;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] passwordHash = digest.digest("password".getBytes(StandardCharsets.UTF_8));
+            passwordString = new String(passwordHash);
+        }
+        catch(NoSuchAlgorithmException x){
+            throw new RuntimeException("[DBError] Something went wrong hashing password");
+        }
 
         for(int i = 0; i < allUsers.size(); i++){
             if(loginRequest.getUsername().equals(allUsers.get(i).getAlias())
-                    && (loginRequest.getPassword().equals("password")
+                    && (loginRequest.getPassword().equals(passwordString)
                     || loginRequest.getPassword().equals("x"))){
                 return new LoginResponse(allUsers.get(i));
             }
@@ -291,10 +304,10 @@ public class MockDatabase {
                 || signUpRequest.getPassword() == null || signUpRequest.getUsername() == null){
             return new SignUpResponse("Not all forms filled out!");
         }
-
+        //Store password hash in database as well
 
         User signedUpUser = new User(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getUsername(),
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+                signUpRequest.getImage());  // this will change when we have a database
 
         for (User user: allUsers) {
             if(user.getAlias().equals(signedUpUser.getAlias())){
@@ -487,7 +500,6 @@ public class MockDatabase {
 
       */
     public UserAliasResponse aliasToUser(String alias){
-//        System.out.println(alias);
         for (Map.Entry<User, List<User>> entry : userFollowing.entrySet()) {
             if(entry.getKey().getAlias().equals(alias)){
                 return new UserAliasResponse(entry.getKey());
@@ -497,6 +509,7 @@ public class MockDatabase {
     }
 
     private User aliasToUser(String alias, boolean test){
+        System.out.println(alias);
         for (Map.Entry<User, List<User>> entry : userFollowing.entrySet()) {
             if(entry.getKey().getAlias().equals(alias)){
                 return entry.getKey();

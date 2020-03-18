@@ -25,10 +25,10 @@ public class Follow {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
         Follow that = (Follow) o;
-        return follower.equals(that.follower) &&
-                followee.equals(that.followee);
+        return follower.getAlias().equals(that.follower.getAlias()) &&
+                followee.getAlias().equals(that.followee.getAlias());
     }
 
     @Override
