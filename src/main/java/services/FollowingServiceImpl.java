@@ -1,6 +1,6 @@
 package services;
 
-import dao.FollowingDAO;
+import dao.FollowDAO;
 import models.services.FollowingService;
 import net.request.FollowingRequest;
 import net.response.FollowingResponse;
@@ -14,7 +14,7 @@ public class FollowingServiceImpl implements FollowingService {             //TO
 
     @Override
     public FollowingResponse getFollowees(FollowingRequest request) throws IOException {
-        FollowingDAO dao = new FollowingDAO();
+        FollowDAO dao = new FollowDAO();
         return dao.getFollowees(request);
     }
 }

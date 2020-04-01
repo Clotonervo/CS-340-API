@@ -21,7 +21,7 @@ public class LoginHandler implements RequestHandler<LoginRequest, LoginResponse>
         try {
             LoginResponse response = loginService.login(request);
             if(response.isSuccess()) {
-                response.setAuthToken(authorizationService.generateAuthToken());
+                response.setAuthToken(authorizationService.generateAuthToken(response.getUser().getAlias()));
             }
             return response;
         }

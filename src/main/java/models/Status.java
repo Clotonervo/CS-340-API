@@ -35,6 +35,10 @@ public class Status {
         return timeStamp;
     }
 
+    public void setTimeStamp(long val){
+        this.timeStamp = val;
+    }
+
     public List<String> getUserMentions()
     {
         return userMentions;

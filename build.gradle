@@ -16,14 +16,15 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-core
     compile group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.0'
-    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ses
-    compile group: 'com.amazonaws', name: 'aws-java-sdk-ses', version: '1.11.737'
+
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.754'
+
+// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
+    compile group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.754'
+    
+    
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
-
-    compile 'io.jsonwebtoken:jjwt-api:0.11.0'
-    runtime 'io.jsonwebtoken:jjwt-impl:0.11.0',
-            // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
-            //'org.bouncycastle:bcprov-jdk15on:1.60',
-            'io.jsonwebtoken:jjwt-gson:0.11.0' // or 'io.jsonwebtoken:jjwt-gson:0.11.0' for gson
+    
 }

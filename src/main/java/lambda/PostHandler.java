@@ -16,15 +16,16 @@ public class PostHandler implements RequestHandler<PostRequest, PostResponse> {
     public PostResponse handleRequest(PostRequest input, Context context) {
         PostService postService = new PostServiceImpl();
         AuthorizationService authorizationService = new AuthorizationServiceImpl();
-        if(input.getAuthToken() == null){
-            throw new RuntimeException("[ClientError] Authorization Token not found");
-        }
-
-        if(!authorizationService.isValid(input.getAuthToken())){
-            throw new RuntimeException("[ClientError] Authorization Token invalid: " + input.getAuthToken());
-        }
-
         try {
+
+            if(input.getAuthToken() == null){
+                throw new RuntimeException("[ClientError] Authorization Token not found");
+            }
+
+            if(!authorizationService.isValid(input.getAuthToken())){
+                throw new RuntimeException("[ClientError] Authorization Token invalid: " + input.getAuthToken());
+            }
+
             PostResponse response = postService.postStatus(input.getStatus());
             return response;
         }

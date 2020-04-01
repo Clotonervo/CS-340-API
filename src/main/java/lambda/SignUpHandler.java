@@ -20,7 +20,7 @@ public class SignUpHandler implements RequestHandler<SignUpRequest, SignUpRespon
         try{
             SignUpResponse response = signUpService.registerUser(request);
             if(response.isSuccess()) {
-                response.setAuthToken(authorizationService.generateAuthToken());
+                response.setAuthToken(authorizationService.generateAuthToken(response.getSignedInUser().getAlias()));
             }
             return response;
         }
