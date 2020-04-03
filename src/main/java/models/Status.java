@@ -18,7 +18,6 @@ public class Status {
         this.links = new ArrayList<>();
         findUserMentions();
         findLinks();
-        this.timeStamp = new Timestamp(System.currentTimeMillis()).getTime();
     }
 
     public Status(){}

@@ -104,18 +104,23 @@ public class FollowDAO {
         QuerySpec querySpec = new QuerySpec()
                 .withKeyConditionExpression("followee_handle = :followee_handle")
                 .withValueMap(valueMap)
-                .withScanIndexForward(true)
-                .withMaxPageSize(request.limit);
+                .withScanIndexForward(true);
 
+        if (request.limit > 0) {
+            querySpec.withMaxPageSize(request.limit);
+        }
         if(request.lastFollower != null) {
             querySpec.withExclusiveStartKey("follower_handle", request.getFollower(),
                     "followee_handle", request.getLastFollowee());
         }
 
         ItemCollection<QueryOutcome> items = null;
+        Iterator<Item> iterator = null;
 
         try {
             items = table.getIndex("followee_handle-follower_handle-index").query(querySpec);
+            iterator = items.iterator();
+            iterator.hasNext();
         }
         catch (Exception e) {
             System.err.println(e.getMessage());
@@ -159,9 +164,12 @@ public class FollowDAO {
         }
 
         ItemCollection<QueryOutcome> items = null;
+        Iterator<Item> iterator = null;
 
         try {
             items = table.query(querySpec);
+            iterator = items.iterator();
+            iterator.hasNext();
         }
         catch (Exception e) {
             System.err.println(e.getMessage());

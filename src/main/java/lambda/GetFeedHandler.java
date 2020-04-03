@@ -16,15 +16,15 @@ public class GetFeedHandler implements RequestHandler<FeedRequest, FeedResponse>
         FeedServiceImpl feedService = new FeedServiceImpl();
         AuthorizationService authorizationService = new AuthorizationServiceImpl();
 
-        if(request.getAuthToken() == null){
-            throw new RuntimeException("[ClientError] Authorization Token not found");
-        }
-
-        if(!authorizationService.isValid(request.getAuthToken())){
-            throw new RuntimeException("[ClientError] Authorization Token invalid: " + request.getAuthToken());
-        }
-
         try {
+            if(request.getAuthToken() == null){
+                throw new RuntimeException("[ClientError] Authorization Token not found");
+            }
+
+            if(!authorizationService.isValid(request.getAuthToken())){
+                throw new RuntimeException("[ClientError] Authorization Token invalid: " + request.getAuthToken());
+            }
+
             FeedResponse response = feedService.getFeed(request);
             return response;
         }

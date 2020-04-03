@@ -2,7 +2,6 @@ package dao;
 
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -11,11 +10,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
-import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
-import models.User;
 import net.response.SignOutResponse;
-import net.response.SignUpResponse;
 
 
 public class AuthDAO {
@@ -39,7 +35,7 @@ public class AuthDAO {
         }
         catch (Exception e) {
             System.err.println(e.getMessage());
-            throw new IOException("Database Error");
+            throw new IOException("Error deleting authtoken");
         }
         return new SignOutResponse(true);
     }
@@ -66,7 +62,7 @@ public class AuthDAO {
         } catch (Exception e) {
             System.err.println("Unable to query");
             System.err.println(e.getMessage());
-            throw new IOException("Database Error");
+            throw new IOException("Error validating authToken");
         }
 
         QueryOutcome outcome = items.getLastLowLevelResult();
@@ -90,7 +86,7 @@ public class AuthDAO {
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            throw new IOException("Database Error");
+            throw new IOException("Error adding authToken: " + e.getMessage());
         }
     }
 }

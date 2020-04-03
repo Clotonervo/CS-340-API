@@ -18,15 +18,15 @@ public class FollowUserHandler implements RequestHandler<FollowRequest, FollowRe
         FollowService followService = new FollowServiceImpl();
         AuthorizationService authorizationService = new AuthorizationServiceImpl();
 
-        if(followRequest.getAuthToken() == null){
-            throw new RuntimeException("[ClientError] Authorization Token not found");
-        }
-
-        if(!authorizationService.isValid(followRequest.getAuthToken())){
-            throw new RuntimeException("[ClientError] Authorization Token invalid: " + followRequest.getAuthToken());
-        }
-
         try {
+            if(followRequest.getAuthToken() == null){
+                throw new RuntimeException("[ClientError] Authorization Token not found");
+            }
+
+            if(!authorizationService.isValid(followRequest.getAuthToken())){
+                throw new RuntimeException("[ClientError] Authorization Token invalid: " + followRequest.getAuthToken());
+            }
+
             FollowResponse response = followService.followUser(followRequest.follow);
             return response;
         }

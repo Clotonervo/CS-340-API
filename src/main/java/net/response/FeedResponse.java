@@ -8,17 +8,15 @@ import java.util.List;
 
 public class FeedResponse extends PagedResponse  {
     private List<Status> statuses;
-    private List<User> following;
 
     public FeedResponse(String message){
         super(false, message, false);
     }
 
-    public FeedResponse(boolean hasMorePages, List<Status> statuses, List<User> users)
+    public FeedResponse(boolean hasMorePages, List<Status> statuses)
     {
         super(true, null, hasMorePages);
         this.statuses = statuses;
-        this.following = users;
     }
 
     public List<Status> getStatuses()
@@ -29,10 +27,6 @@ public class FeedResponse extends PagedResponse  {
     public void setStatuses(List<Status> statuses)
     {
         this.statuses = statuses;
-    }
-
-    public List<User> getFollowing() {
-        return following;
     }
 
     public boolean isSuccess() {

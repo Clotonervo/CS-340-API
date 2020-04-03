@@ -18,15 +18,15 @@ public class IsFollowingHandler implements RequestHandler<IsFollowingRequest, Is
         FollowService followService = new FollowServiceImpl();
         AuthorizationService authorizationService = new AuthorizationServiceImpl();
 
-        if(input.getAuthToken() == null){
-            throw new RuntimeException("[ClientError] Authorization Token not found");
-        }
-
-        if(!authorizationService.isValid(input.getAuthToken())){
-            throw new RuntimeException("[ClientError] Authorization Token invalid: " + input.getAuthToken());
-        }
-
         try {
+            if(input.getAuthToken() == null){
+                throw new RuntimeException("[ClientError] Authorization Token not found");
+            }
+
+            if(!authorizationService.isValid(input.getAuthToken())){
+                throw new RuntimeException("[ClientError] Authorization Token invalid: " + input.getAuthToken());
+            }
+
             IsFollowingResponse response = followService.isFollowing(input.getFollow());
             return response;
         }

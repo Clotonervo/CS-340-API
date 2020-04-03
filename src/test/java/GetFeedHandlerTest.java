@@ -80,7 +80,6 @@ public class GetFeedHandlerTest {
         Assertions.assertTrue(response.isSuccess());
         Assertions.assertNotNull(response.getStatuses());
         Assertions.assertNull(response.getMessage());
-        Assertions.assertNotNull(response.getFollowing());
         Assertions.assertEquals(5,response.getStatuses().size());
     }
 

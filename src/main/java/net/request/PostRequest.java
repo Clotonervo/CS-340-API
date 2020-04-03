@@ -4,6 +4,7 @@ import models.Status;
 
 public class PostRequest {
     public Status status;
+    public String userAlias;
     public String authToken;
 
     public PostRequest(){}
@@ -14,5 +15,9 @@ public class PostRequest {
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public String getUserAlias() {
+        return userAlias;
     }
 }

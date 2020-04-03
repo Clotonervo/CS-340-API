@@ -3,11 +3,9 @@ package dao;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
-import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import models.User;
 import net.request.LoginRequest;
 import net.request.SignUpRequest;
@@ -16,6 +14,8 @@ import net.response.SignUpResponse;
 import net.response.UserAliasResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class UserDAO {
 
@@ -66,6 +66,10 @@ public class UserDAO {
 
      */
     public SignUpResponse registerUser(SignUpRequest request) throws IOException {
+        if(aliasToUser(request.getUsername()).isSuccess()){
+            return new SignUpResponse("User already exists!");
+        }
+
         try {
             PutItemOutcome outcome = table
                     .putItem(new Item().withPrimaryKey("user_alias", request.getUsername())
@@ -87,25 +91,36 @@ public class UserDAO {
 
      */
     public UserAliasResponse aliasToUser(String alias) throws IOException {
-        GetItemSpec spec = new GetItemSpec().withPrimaryKey("user_alias", alias);
+        HashMap<String, Object> valueMap = new HashMap<String, Object>();
+        valueMap.put(":user_alias", alias);
 
-        Item result = null;
+        QuerySpec querySpec = new QuerySpec()
+                .withKeyConditionExpression("user_alias = :user_alias")
+                .withValueMap(valueMap)
+                .withScanIndexForward(false);
+
+        ItemCollection<QueryOutcome> items = null;
+        Iterator<Item> iterator = null;
+        Item item = null;
 
         try {
-            System.out.println("Attempting to read the item...");
-            result = table.getItem(spec);
-        }
-        catch (Exception e) {
-            System.err.println("Unable to read item ");
+            items = table.query(querySpec);
+            iterator = items.iterator();
+            iterator.hasNext();
+
+        } catch (Exception e) {
+            System.err.println("Unable to query");
             System.err.println(e.getMessage());
-            throw new IOException("Database error");
+            throw new IOException("Database Error");
         }
 
-        if (result == null){
-            return new UserAliasResponse();
+        QueryOutcome outcome = items.getLastLowLevelResult();
+        if (outcome.getItems().size() == 0){
+            return new UserAliasResponse("Doesn't exist");
         }
-        else {
-            User userToReturn = new User(result.getString("user_fname"), result.getString("user_lname"), alias, result.getString("user_url"));
+        else{
+            item = outcome.getItems().get(0);
+            User userToReturn = new User(item.getString("user_fname"), item.getString("user_lname"), alias, item.getString("user_url"));
             return new UserAliasResponse(userToReturn);
         }
     }

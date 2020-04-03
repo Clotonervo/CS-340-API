@@ -17,16 +17,15 @@ public class UnfollowUserHandler implements RequestHandler<UnfollowRequest, Unfo
         UnfollowService unfollowService = new UnfollowServiceImpl();
         AuthorizationService authorizationService = new AuthorizationServiceImpl();
 
-
-        if(unfollowRequest.getAuthToken() == null){
-            throw new RuntimeException("[ClientError] Authorization Token not found");
-        }
-
-        if(!authorizationService.isValid(unfollowRequest.getAuthToken())){
-            throw new RuntimeException("[ClientError] Authorization Token invalid: " + unfollowRequest.getAuthToken());
-        }
-
         try {
+            if(unfollowRequest.getAuthToken() == null){
+                throw new RuntimeException("[ClientError] Authorization Token not found");
+            }
+
+            if(!authorizationService.isValid(unfollowRequest.getAuthToken())){
+                throw new RuntimeException("[ClientError] Authorization Token invalid: " + unfollowRequest.getAuthToken());
+            }
+
             UnfollowResponse unfollowResponse = unfollowService.unfollowUser(unfollowRequest.getFollow());
             return unfollowResponse;
         }

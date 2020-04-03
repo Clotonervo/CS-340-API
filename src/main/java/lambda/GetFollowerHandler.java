@@ -17,16 +17,15 @@ public class GetFollowerHandler implements RequestHandler<FollowerRequest, Follo
         FollowerServiceImpl service = new FollowerServiceImpl();
         AuthorizationService authorizationService = new AuthorizationServiceImpl();
 
-
-        if(request.getAuthToken() == null){
-            throw new RuntimeException("[ClientError] Authorization Token not found");
-        }
-
-        if(!authorizationService.isValid(request.getAuthToken())){
-            throw new RuntimeException("[ClientError] Authorization Token invalid: " + request.getAuthToken());
-        }
-
         try {
+            if(request.getAuthToken() == null){
+                throw new RuntimeException("[ClientError] Authorization Token not found");
+            }
+
+            if(!authorizationService.isValid(request.getAuthToken())){
+                throw new RuntimeException("[ClientError] Authorization Token invalid: " + request.getAuthToken());
+            }
+
             FollowerResponse response = service.getFollowers(request);
             return response;
         }
