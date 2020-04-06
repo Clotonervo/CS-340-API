@@ -33,12 +33,12 @@ public class StoryDAO {
         QuerySpec querySpec = new QuerySpec()
                 .withValueMap(valueMap)
                 .withKeyConditionExpression("story_owner = :story_owner")
-                .withScanIndexForward(true)
+                .withScanIndexForward(false)
                 .withMaxPageSize(request.limit);
 
         if(request.getLastStatus() != null) {
             querySpec.withExclusiveStartKey("story_owner", request.getLastStatus().getUser().getAlias(),
-                    "time_stamp", request.getLastStatus().getTimeStamp());              //TODO: make sure timestamp remains the same throughout all the code
+                    "time_stamp", request.getLastStatus().getTimeStamp());
         }
 
         ItemCollection<QueryOutcome> items = null;

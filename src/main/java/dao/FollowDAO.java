@@ -82,12 +82,17 @@ public class FollowDAO {
         GetItemSpec spec = new GetItemSpec().withPrimaryKey("follower_handle", follow.getFollower().getAlias(),
                 "followee_handle", follow.getFollowee().getAlias());
 
+        Item outcome = null;
         try {
-            Item outcome = table.getItem(spec);
+            outcome = table.getItem(spec);
         }
         catch (Exception e) {
             System.err.println("Unable to read item ");
             throw new IOException("Database Error");
+        }
+
+        if (outcome == null){
+            return new IsFollowingResponse(false);
         }
 
         return new IsFollowingResponse(true);
@@ -97,9 +102,11 @@ public class FollowDAO {
             Get all the user's followers
 
      */
-    public FollowerResponse getFollowers(FollowerRequest request) throws IOException {      //TODO: factor out none database stuff to services
+    public FollowerResponse getFollowers(FollowerRequest request) throws IOException {
         HashMap<String, Object> valueMap = new HashMap<String, Object>();
         valueMap.put(":followee_handle", request.getFollower());
+        System.out.println(request.getFollower());
+        System.out.println(request.getLastFollowee());
 
         QuerySpec querySpec = new QuerySpec()
                 .withKeyConditionExpression("followee_handle = :followee_handle")
@@ -109,9 +116,9 @@ public class FollowDAO {
         if (request.limit > 0) {
             querySpec.withMaxPageSize(request.limit);
         }
-        if(request.lastFollower != null) {
-            querySpec.withExclusiveStartKey("follower_handle", request.getFollower(),
-                    "followee_handle", request.getLastFollowee());
+        if(!request.lastFollower.isEmpty()) {
+            querySpec.withExclusiveStartKey("followee_handle", request.getFollower(),
+                    "follower_handle", request.getLastFollowee());
         }
 
         ItemCollection<QueryOutcome> items = null;
@@ -124,10 +131,12 @@ public class FollowDAO {
         }
         catch (Exception e) {
             System.err.println(e.getMessage());
+            throw new IOException("Error getting followers: " + e.getMessage());
         }
 
         boolean hasMorePages = false;
         QueryOutcome outcome = items.getLastLowLevelResult();
+        System.out.println(outcome.getItems());
         ArrayList<Item> itemList = new ArrayList<Item>(outcome.getItems());
         ArrayList<User> followerList = new ArrayList<User>();
         if(outcome.getQueryResult().getLastEvaluatedKey() == null){
@@ -137,7 +146,8 @@ public class FollowDAO {
             hasMorePages = true;
         }
         for (Item testItem: itemList) {
-            User user = new User(testItem.getString("follower_fname"), testItem.getString("follower_lname"), testItem.getString("follower_url"));
+            User user = new User(testItem.getString("follower_fname"), testItem.getString("follower_lname"),
+                    testItem.getString("follower_handle"), testItem.getString("follower_url"));
             followerList.add(user);
         }
 
@@ -158,7 +168,7 @@ public class FollowDAO {
                 .withScanIndexForward(true)
                 .withMaxPageSize(request.limit);
 
-        if(request.getLastFollowee() != null) {
+        if(!request.getLastFollowee().isEmpty()) {
             querySpec.withExclusiveStartKey("follower_handle", request.getFollower(),
                     "followee_handle", request.getLastFollowee());
         }
@@ -188,7 +198,8 @@ public class FollowDAO {
             hasMorePages = true;
         }
         for (Item testItem: itemList) {
-            User user = new User(testItem.getString("followee_fname"), testItem.getString("followee_lname"), testItem.getString("followee_url"));
+            User user = new User(testItem.getString("followee_fname"), testItem.getString("followee_lname"),
+                    testItem.getString("followee_handle"), testItem.getString("followee_url"));
             followingList.add(user);
         }
 

@@ -52,12 +52,12 @@ public class FeedDAO {
         QuerySpec querySpec = new QuerySpec()
                 .withValueMap(valueMap)
                 .withKeyConditionExpression("feed_owner = :feed_owner")
-                .withScanIndexForward(true)
+                .withScanIndexForward(false)
                 .withMaxPageSize(request.limit);
 
         if(request.getLastStatus() != null) {
             querySpec.withExclusiveStartKey("feed_owner", request.getLastStatus().getUser().getAlias(),
-                    "time_stamp", request.getLastStatus().getTimeStamp());              //TODO: make sure timestamp remains the same throughout all the code
+                    "time_stamp", request.getLastStatus().getTimeStamp());
         }
 
         ItemCollection<QueryOutcome> items = null;

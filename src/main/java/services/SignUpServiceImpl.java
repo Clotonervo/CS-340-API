@@ -43,7 +43,7 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
 
-    private String convertToImage(String uploadedImage){                //TODO: Fix this, it doesn't upload correctly
+    private String convertToImage(String uploadedImage){
         byte[] byteArrayImage = Base64.decodeBase64(uploadedImage);
 
         InputStream fis = new ByteArrayInputStream(byteArrayImage);

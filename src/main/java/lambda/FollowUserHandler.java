@@ -11,7 +11,7 @@ import services.FollowServiceImpl;
 
 import java.io.IOException;
 
-public class FollowUserHandler implements RequestHandler<FollowRequest, FollowResponse> {      //TODO: Tests, test that its calling the right methods
+public class FollowUserHandler implements RequestHandler<FollowRequest, FollowResponse> {
 
     @Override
     public FollowResponse handleRequest(FollowRequest followRequest, Context context) {

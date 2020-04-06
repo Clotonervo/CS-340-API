@@ -82,7 +82,7 @@ public class AuthDAO {
             PutItemOutcome outcome = table
                     .putItem(new Item().withPrimaryKey("user_alias", alias)
                             .withString("auth_token", token)
-                            .withLong("expiration", System.currentTimeMillis()+5*60*1000));
+                            .withLong("expiration", System.currentTimeMillis()+20*60*1000));
 
         } catch (Exception e) {
             System.err.println(e.getMessage());

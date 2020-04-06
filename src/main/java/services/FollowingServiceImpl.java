@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Contains the business logic for getting the users a user is following.
  */
-public class FollowingServiceImpl implements FollowingService {             //TODO: Tests for services
+public class FollowingServiceImpl implements FollowingService {
 
     @Override
     public FollowingResponse getFollowees(FollowingRequest request) throws IOException {

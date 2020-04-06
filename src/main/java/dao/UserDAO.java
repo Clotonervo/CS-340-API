@@ -33,7 +33,7 @@ public class UserDAO {
                     Login a user
 
      */
-    public LoginResponse authenticateUser(LoginRequest request) throws IOException {                //TODO: factor all non database logic to service
+    public LoginResponse authenticateUser(LoginRequest request) throws IOException {
         GetItemSpec spec = new GetItemSpec().withPrimaryKey("user_alias", request.getUsername());
 
         Item result = null;

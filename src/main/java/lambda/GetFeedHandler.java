@@ -10,7 +10,7 @@ import services.FeedServiceImpl;
 
 import java.io.IOException;
 
-public class GetFeedHandler implements RequestHandler<FeedRequest, FeedResponse> {
+public class GetFeedHandler implements RequestHandler<FeedRequest, FeedResponse> {  //TODO: Do tests!
 
     public FeedResponse handleRequest(FeedRequest request, Context context) {
         FeedServiceImpl feedService = new FeedServiceImpl();

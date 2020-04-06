@@ -27,7 +27,8 @@ public class PostDAO {
         FollowerRequest followerRequest = new FollowerRequest();
         followerRequest.limit = -1;
         followerRequest.followee = currentUser.getAlias();
-        FollowerResponse response = followDAO.getFollowers(new FollowerRequest());
+        FollowerResponse response = followDAO.getFollowers(new FollowerRequest(status.getUser().getAlias(),
+                10000000, ""));
 
         storyDAO.postToStory(status);
 
