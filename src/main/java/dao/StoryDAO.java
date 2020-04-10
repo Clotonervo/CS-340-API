@@ -75,6 +75,8 @@ public class StoryDAO {
     }
 
     public void postToStory(Status status) throws IOException {
+//        System.out.println(status.getUser().getAlias());
+//        System.out.println(status.getMessage());
         try {
             PutItemOutcome outcome = table
                     .putItem(new Item().withPrimaryKey("story_owner", status.getUser().getAlias(), "time_stamp", status.getTimeStamp())
@@ -84,7 +86,9 @@ public class StoryDAO {
         catch (Exception e) {
             System.err.println("Unable to add item");
             System.err.println(e.getMessage());
+            System.out.print("something went wrong");
             throw new IOException("Database error");
         }
+//        System.out.println("Everything went well");
     }
 }

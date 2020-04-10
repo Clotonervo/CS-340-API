@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 public class FeedDAO {
 
@@ -28,20 +29,19 @@ public class FeedDAO {
         table = dynamoDB.getTable("feed");
     }
 
-    public void postStatusToFeed(String ownerAlias, Status status){
+    public void postStatusToFeed(List<Item> batch) throws IOException {
         try {
-            PutItemOutcome outcome = table
-                    .putItem(new Item().withPrimaryKey("feed_owner", ownerAlias, "time_stamp", status.getTimeStamp())
-                            .withString("message", status.getMessage())
-                            .withString("user_fname", status.getUser().getFirstName())
-                            .withString("user_lname", status.getUser().getLastName())
-                            .withString("user_alias", status.getUser().getAlias())
-                            .withString("user_url", status.getUser().getImageUrl()));
-
+            TableWriteItems tableWriteItems = new TableWriteItems("feed");
+            tableWriteItems.withItemsToPut(batch);
+            BatchWriteItemOutcome outcome = dynamoDB.batchWriteItem(tableWriteItems);
+            while(outcome.getUnprocessedItems().size() > 0) {
+                outcome = dynamoDB.batchWriteItemUnprocessed(outcome.getUnprocessedItems());
+            }
         }
         catch (Exception e) {
             System.err.println("Unable to add item");
             System.err.println(e.getMessage());
+            throw new IOException("Error when posting status to user feed");
         }
     }
 
@@ -56,7 +56,7 @@ public class FeedDAO {
                 .withMaxPageSize(request.limit);
 
         if(request.getLastStatus() != null) {
-            querySpec.withExclusiveStartKey("feed_owner", request.getLastStatus().getUser().getAlias(),
+            querySpec.withExclusiveStartKey("feed_owner", request.getUser().getAlias(),
                     "time_stamp", request.getLastStatus().getTimeStamp());
         }
 
@@ -71,7 +71,7 @@ public class FeedDAO {
         }
         catch (Exception e) {
             System.err.println(e.getMessage());
-            throw new IOException("Database Error");
+            throw new IOException("Something went wrong when quereing feed: " + e.getMessage());
         }
 
         boolean hasMorePages = false;

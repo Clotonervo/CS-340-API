@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import models.Follow;
 import models.User;
 import net.request.FollowerRequest;
@@ -105,8 +106,8 @@ public class FollowDAO {
     public FollowerResponse getFollowers(FollowerRequest request) throws IOException {
         HashMap<String, Object> valueMap = new HashMap<String, Object>();
         valueMap.put(":followee_handle", request.getFollower());
-        System.out.println(request.getFollower());
-        System.out.println(request.getLastFollowee());
+//        System.out.println(request.getFollower());
+//        System.out.println(request.getLastFollowee());
 
         QuerySpec querySpec = new QuerySpec()
                 .withKeyConditionExpression("followee_handle = :followee_handle")
@@ -116,6 +117,7 @@ public class FollowDAO {
         if (request.limit > 0) {
             querySpec.withMaxPageSize(request.limit);
         }
+
         if(!request.lastFollower.isEmpty()) {
             querySpec.withExclusiveStartKey("followee_handle", request.getFollower(),
                     "follower_handle", request.getLastFollowee());
@@ -136,14 +138,21 @@ public class FollowDAO {
 
         boolean hasMorePages = false;
         QueryOutcome outcome = items.getLastLowLevelResult();
-        System.out.println(outcome.getItems());
+//        System.out.println(outcome.getItems());
         ArrayList<Item> itemList = new ArrayList<Item>(outcome.getItems());
         ArrayList<User> followerList = new ArrayList<User>();
+        String lastFollower = "";
         if(outcome.getQueryResult().getLastEvaluatedKey() == null){
             hasMorePages = false;
         }
         else {
             hasMorePages = true;
+            Map<String, AttributeValue> userItem = outcome.getQueryResult().getLastEvaluatedKey();
+            AttributeValue value = userItem.get("follower_handle");
+//            System.out.println(value.getS());
+//            lastFollower = userItem.get("follower_handle");
+//            System.out.println(userItem);
+            lastFollower = value.getS();
         }
         for (Item testItem: itemList) {
             User user = new User(testItem.getString("follower_fname"), testItem.getString("follower_lname"),
@@ -151,7 +160,7 @@ public class FollowDAO {
             followerList.add(user);
         }
 
-        return new FollowerResponse(followerList, hasMorePages);
+        return new FollowerResponse(followerList, hasMorePages, lastFollower);
     }
 
     /*

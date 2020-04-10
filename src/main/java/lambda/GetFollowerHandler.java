@@ -27,6 +27,7 @@ public class GetFollowerHandler implements RequestHandler<FollowerRequest, Follo
             }
 
             FollowerResponse response = service.getFollowers(request);
+            System.out.println(response.getFollowers().size());
             return response;
         }
         catch (IOException x){
